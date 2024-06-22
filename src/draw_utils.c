@@ -1,6 +1,6 @@
 #include "draw_utils.h"
 
-void DrawCircle(SDL_Renderer *renderer, int32_t centreX, int32_t centreY, int32_t radius, SDL_Color color)
+void DrawCircleParticle(SDL_Renderer *renderer, int32_t centreX, int32_t centreY, int32_t radius, SDL_Color color)
 {
     const int32_t diameter = (radius * 2);
     int32_t x = (radius - 1);

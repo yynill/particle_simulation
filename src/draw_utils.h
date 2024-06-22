@@ -5,6 +5,6 @@
 #include <stdint.h>
 
 // Draw an unfilled circle outline
-void DrawCircle(SDL_Renderer *renderer, int32_t centreX, int32_t centreY, int32_t radius, SDL_Color color);
+void DrawCircleParticle(SDL_Renderer *renderer, int32_t centreX, int32_t centreY, int32_t radius, SDL_Color color);
 
 #endif // DRAW_UTILS_H
