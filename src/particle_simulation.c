@@ -8,7 +8,8 @@
 #define WINDOW_WIDTH 1600
 #define WINDOW_HEIGHT 1000
 #define TIME_STEP 0.01
-#define PARTICLE_RADIUS 2
+#define PARTICLE_RADIUS 5
+#define VELOCITY 200
 
 typedef struct
 {
@@ -30,14 +31,26 @@ void initialize_particles(Particle particles[], int num_particles)
 
 void update_particles(Particle particles[], int num_particles, float dt)
 {
+    for (int i = 0; i < num_particles; ++i)
+    {
+        // Update position based on velocity and time step
+        particles[i].x += VELOCITY * particles[i].vx * dt;
+        particles[i].y += VELOCITY * particles[i].vy * dt;
+
+        // Check and handle collisions with window boundaries
+        if (particles[i].x < 0 || particles[i].x > WINDOW_WIDTH)
+            particles[i].vx *= -1;
+        if (particles[i].y < 0 || particles[i].y > WINDOW_HEIGHT)
+            particles[i].vy *= -1;
+    }
 }
 
 void render_particles(SDL_Renderer *renderer, Particle particles[], int num_particles)
 {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+    SDL_Color particleColor = {3, 177, 255, 255};
     for (int i = 0; i < num_particles; i++)
     {
-        DrawCircle(renderer, (int)particles[i].x, (int)particles[i].y, PARTICLE_RADIUS);
+        DrawCircle(renderer, (int)particles[i].x, (int)particles[i].y, PARTICLE_RADIUS, particleColor);
     }
 }
 
