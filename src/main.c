@@ -33,10 +33,18 @@ int main()
     Particle particles[NUM_PARTICLES];
     initialize_particles(particles, NUM_PARTICLES);
 
+    // FPS calculation variables
+    Uint32 frameStart;
+    int frameCount = 0;
+    float fps = 0;
+    Uint32 lastFpsCalculation = SDL_GetTicks();
+
     int quit = 0;
     SDL_Event e;
     while (!quit)
     {
+        frameStart = SDL_GetTicks();
+
         while (SDL_PollEvent(&e))
         {
             if (e.type == SDL_QUIT)
@@ -53,7 +61,18 @@ int main()
         render_particles(renderer, particle_texture, particles, NUM_PARTICLES);
 
         SDL_RenderPresent(renderer);
-        SDL_Delay((int)(TIME_STEP * 1000)); // Delay to simulate time step
+
+        // Calculate FPS
+        frameCount++;
+        if (SDL_GetTicks() - lastFpsCalculation >= 1000)
+        { // Update every second
+            fps = frameCount;
+            printf("FPS: %.2f\n", fps);
+            frameCount = 0;
+            lastFpsCalculation = SDL_GetTicks();
+        }
+
+        // No delay, render as fast as possible
     }
 
     SDL_DestroyTexture(particle_texture);

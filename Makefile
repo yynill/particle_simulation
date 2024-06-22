@@ -7,7 +7,7 @@ BUILD_DIR = build
 
 SRC = $(wildcard $(SRC_DIR)/*.c)
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
-EXEC = particle_simulation
+EXEC = main
 
 all: $(BUILD_DIR)/$(EXEC)
 

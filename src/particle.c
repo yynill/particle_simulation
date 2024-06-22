@@ -2,30 +2,53 @@
 #include "draw_utils.h"
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 void initialize_particles(Particle particles[], int num_particles)
 {
     srand((unsigned int)time(NULL));
     for (int i = 0; i < num_particles; i++)
     {
-        particles[i].x = rand() % WINDOW_WIDTH;
-        particles[i].y = rand() % WINDOW_HEIGHT;
+        particles[i].x = PARTICLE_RADIUS + rand() % (WINDOW_WIDTH - 2 * PARTICLE_RADIUS);
+        particles[i].y = PARTICLE_RADIUS + rand() % (WINDOW_HEIGHT - 2 * PARTICLE_RADIUS);
         particles[i].vx = (rand() % 100) / 50.0f - 1.0f;
         particles[i].vy = (rand() % 100) / 50.0f - 1.0f;
     }
+}
+
+float distance_between_particles(Particle p1, Particle p2)
+{
+    int dx = p1.x - p2.x;
+    int dy = p1.y - p2.y;
+    return sqrt(dx * dx + dy * dy);
 }
 
 void update_particles(Particle particles[], int num_particles, float dt)
 {
     for (int i = 0; i < num_particles; ++i)
     {
+        // particle - border collision
         particles[i].x += VELOCITY * particles[i].vx * dt;
         particles[i].y += VELOCITY * particles[i].vy * dt;
 
-        if (particles[i].x < 0 || particles[i].x > WINDOW_WIDTH)
+        if (particles[i].x < 0 + PARTICLE_RADIUS || particles[i].x > WINDOW_WIDTH - PARTICLE_RADIUS)
             particles[i].vx *= -1;
-        if (particles[i].y < 0 || particles[i].y > WINDOW_HEIGHT)
+        if (particles[i].y < 0 + PARTICLE_RADIUS || particles[i].y > WINDOW_HEIGHT - PARTICLE_RADIUS)
             particles[i].vy *= -1;
+
+        // particle - particle collision
+        for (int j = 0; j < num_particles; ++j)
+        {
+            if (j != i)
+            {
+                float distance = distance_between_particles(particles[i], particles[j]);
+                if (distance < 2 * PARTICLE_RADIUS)
+                {
+                    particles[i].vx *= -1;
+                    particles[i].vy *= -1;
+                }
+            }
+        }
     }
 }
 

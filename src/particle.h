@@ -3,12 +3,12 @@
 
 #include </opt/homebrew/Cellar/sdl2/2.30.4/include/SDL2/SDL.h>
 
-#define NUM_PARTICLES 10000
+#define NUM_PARTICLES 1000
 #define WINDOW_WIDTH 1600
 #define WINDOW_HEIGHT 1000
 #define TIME_STEP 0.01
 #define PARTICLE_RADIUS 5
-#define VELOCITY 200
+#define VELOCITY 100
 
 typedef struct
 {
