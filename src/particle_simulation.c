@@ -45,12 +45,26 @@ void update_particles(Particle particles[], int num_particles, float dt)
     }
 }
 
-void render_particles(SDL_Renderer *renderer, Particle particles[], int num_particles)
+SDL_Texture *create_particle_texture(SDL_Renderer *renderer, int radius, SDL_Color color)
 {
-    SDL_Color particleColor = {3, 177, 255, 255};
+    int diameter = 2 * radius;
+    SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, diameter, diameter);
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderTarget(renderer, texture);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    SDL_RenderClear(renderer);
+    DrawCircle(renderer, radius, radius, radius, color);
+    SDL_SetRenderTarget(renderer, NULL);
+    return texture;
+}
+
+void render_particles(SDL_Renderer *renderer, SDL_Texture *particle_texture, Particle particles[], int num_particles)
+{
+    int diameter = 2 * PARTICLE_RADIUS;
     for (int i = 0; i < num_particles; i++)
     {
-        DrawCircle(renderer, (int)particles[i].x, (int)particles[i].y, PARTICLE_RADIUS, particleColor);
+        SDL_Rect dst_rect = {(int)particles[i].x - PARTICLE_RADIUS, (int)particles[i].y - PARTICLE_RADIUS, diameter, diameter};
+        SDL_RenderCopy(renderer, particle_texture, NULL, &dst_rect);
     }
 }
 
@@ -79,6 +93,9 @@ int main()
         return 1;
     }
 
+    SDL_Color particleColor = {3, 177, 255, 255};
+    SDL_Texture *particle_texture = create_particle_texture(renderer, PARTICLE_RADIUS, particleColor);
+
     Particle particles[NUM_PARTICLES];
     initialize_particles(particles, NUM_PARTICLES);
 
@@ -99,13 +116,13 @@ int main()
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(renderer);
 
-        render_particles(renderer, particles, NUM_PARTICLES);
+        render_particles(renderer, particle_texture, particles, NUM_PARTICLES);
 
         SDL_RenderPresent(renderer);
-
         SDL_Delay((int)(TIME_STEP * 1000)); // Delay to simulate time step
     }
 
+    SDL_DestroyTexture(particle_texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(win);
     SDL_Quit();

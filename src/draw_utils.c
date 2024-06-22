@@ -3,7 +3,6 @@
 void DrawCircle(SDL_Renderer *renderer, int32_t centreX, int32_t centreY, int32_t radius, SDL_Color color)
 {
     const int32_t diameter = (radius * 2);
-
     int32_t x = (radius - 1);
     int32_t y = 0;
     int32_t tx = 1;
